@@ -26,7 +26,7 @@ Patch1:         policycoreutils-po.patch
 Patch3:         policycoreutils-gui.patch
 Patch4:         policycoreutils-sepolgen.patch
 
-BuildRequires: pam-devel sepol-devel >= %{libsepolver} semanage-devel >= %{libsemanagever} selinux-devel >= %{libselinuxver} cap-devel audit-libs-devel >=  %{libauditver} gettext
+BuildRequires: pam-devel sepol-static-devel >= %{libsepolver} semanage-devel >= %{libsemanagever} selinux-devel >= %{libselinuxver} cap-devel audit-libs-devel >=  %{libauditver} gettext
 Requires: /bin/mount /bin/egrep /bin/awk /usr/bin/diff rpm /bin/sed 
 #Requires: selinux >=  %{libselinuxver} sepol >= %{libsepolver} semanage >= %{libsemanagever} coreutils audit-libs-python >=  %{libauditver} checkpolicy selinux-python
 Requires(post): /sbin/service /sbin/chkconfig 
