@@ -1,18 +1,17 @@
-%define        libauditver        1.4.2-1
-%define        libsepolver        2.0.10-1
-%define        libsemanagever        2.0.5-1
-%define        libselinuxver        2.0.34-1
-%define        sepolgenver        1.0.10
+%define	libauditver	1.4.2-1
+%define	libsepolver	2.0.19-1
+%define	libsemanagever	2.0.5-1
+%define	libselinuxver	2.0.46-5
+%define	sepolgenver	1.0.11
 Summary: SELinux policy core utilities
-
-Name:         policycoreutils
-Version: 2.0.34
+Name:	 policycoreutils
+Version: 2.0.46
 Release: %mkrel 1
 License: GPLv2+
-Group:         System/Base
-Source:         http://www.nsa.gov/selinux/archives/policycoreutils-%{version}.tgz
+Group:	 System/Base
+Source:	 http://www.nsa.gov/selinux/archives/policycoreutils-%{version}.tgz
 Source1: http://www.nsa.gov/selinux/archives/sepolgen-%{sepolgenver}.tgz
-URL:         http://www.selinuxproject.org
+URL:	 http://www.selinuxproject.org
 Source2: system-config-selinux.png
 Source3: system-config-selinux.desktop
 Source4: system-config-selinux.pam
@@ -20,16 +19,20 @@ Source5: system-config-selinux.console
 Source6: selinux-polgengui.desktop
 Source7: selinux-polgengui.console
 Source8: policycoreutils_man_ru2.tar.bz2
-Patch:         policycoreutils-rhat.patch
-Patch1:         policycoreutils-po.patch
+Patch:	 policycoreutils-rhat.patch
+Patch1:	 policycoreutils-po.patch
 #Patch2: policycoreutils-sepolgen.patch
-Patch3:         policycoreutils-gui.patch
-Patch4:         policycoreutils-sepolgen.patch
+Patch3:	 policycoreutils-gui.patch
+Patch4:	 policycoreutils-sepolgen.patch
 
-BuildRequires: pam-devel sepol-static-devel >= %{libsepolver} semanage-devel >= %{libsemanagever} selinux-devel >= %{libselinuxver} cap-devel audit-libs-devel >=  %{libauditver} gettext
+#BuildRequires: pam-devel libsepol-static >= %{libsepolver} libsemanage-devel >= %{libsemanagever} libselinux-devel >= %{libselinuxver}  libcap-devel audit-libs-devel >=  %{libauditver} gettext
+BuildRequires: pam-devel sepol-static-devel >= %{libsepolver} semanage-devel >= %{libsemanagever} selinux-devel >= %{libselinuxver}  cap-devel audit-libs-devel >=  %{libauditver} gettext
 Requires: /bin/mount /bin/egrep /bin/awk /usr/bin/diff rpm /bin/sed 
-#Requires: selinux >=  %{libselinuxver} sepol >= %{libsepolver} semanage >= %{libsemanagever} coreutils audit-libs-python >=  %{libauditver} checkpolicy selinux-python
-Requires(post): /sbin/service /sbin/chkconfig 
+#Requires: libselinux >=  %{libselinuxver} libsepol >= %{libsepolver} libsemanage >= %{libsemanagever} coreutils audit-libs-python >=  %{libauditver} checkpolicy libselinux-python
+Requires: checkpolicy
+#Requires(post): /sbin/service /sbin/chkconfig 
+Requires(post): rpm-helper
+Requires(preun): rpm-helper
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
@@ -84,15 +87,14 @@ tar -jxf %{SOURCE8} -C %{buildroot}/
 ln -sf consolehelper %{buildroot}%{_bindir}/system-config-selinux
 ln -sf consolehelper %{buildroot}%{_bindir}/selinux-polgengui
 
-desktop-file-install --vendor fedora \
-                     --dir ${RPM_BUILD_ROOT}%{_datadir}/applications        \
-                     --add-category X-Fedora                                \
-                     %{SOURCE3}
+desktop-file-install --vendor "" \
+		     --dir ${RPM_BUILD_ROOT}%{_datadir}/applications	\
+		     --add-category Settings				\
+		     %{SOURCE3}
 
-desktop-file-install --vendor fedora \
-                     --dir ${RPM_BUILD_ROOT}%{_datadir}/applications        \
-                     --add-category X-Fedora                                \
-                     %{SOURCE6}
+desktop-file-install --vendor "" \
+		     --dir ${RPM_BUILD_ROOT}%{_datadir}/applications	\
+		     %{SOURCE6}
 %find_lang %{name}
 
 %package newrole
@@ -112,11 +114,12 @@ or level of a logged in user.
 Summary: SELinux configuration GUI
 Group: System/Base
 Requires: policycoreutils = %{version}-%{release} 
+#Requires: gnome-python2, pygtk2, pygtk2-libglade, gnome-python2-canvas 
 Requires: gnome-python, pygtk2, python-gtk-glade, gnome-python-canvas
+#Requires: usermode, rhpl
 Requires: usermode-consoleonly, rhpl
 Requires: python >= 2.4
 BuildRequires: desktop-file-utils
-Requires: selinux-policy-devel
 
 %description gui
 system-config-selinux is a utility for managing the SELinux environment
@@ -124,8 +127,8 @@ system-config-selinux is a utility for managing the SELinux environment
 %files gui
 %{_bindir}/system-config-selinux
 %{_bindir}/selinux-polgengui
-%{_datadir}/applications/fedora-system-config-selinux.desktop
-%{_datadir}/applications/fedora-selinux-polgengui.desktop
+%{_datadir}/applications/*system-config-selinux.desktop
+%{_datadir}/applications/*selinux-polgengui.desktop
 %dir %{_datadir}/system-config-selinux
 %dir %{_datadir}/system-config-selinux/templates
 %{_datadir}/system-config-selinux/*.py*
@@ -164,9 +167,10 @@ rm -rf %{buildroot}
 %{_bindir}/semodule_expand
 %{_bindir}/semodule_link
 %{_bindir}/semodule_package
-%{_mandir}/man1/*
-%{_mandir}/man8/*
-%{_mandir}/ru/*/*
+%{_mandir}/man1/*.1*
+%{_mandir}/man8/*.8*
+%{_mandir}/ru/man1/*.1*
+%{_mandir}/ru/man8/*.8*
 %config(noreplace) %{_sysconfdir}/pam.d/newrole
 %config(noreplace) %{_sysconfdir}/pam.d/run_init
 %config(noreplace) %{_sysconfdir}/sestatus.conf
@@ -179,19 +183,10 @@ rm -rf %{buildroot}
 /var/lib/sepolgen/perm_map
 
 %preun
-if [ $1 -eq 0 ]; then
-   /sbin/service restorecond stop > /dev/null 2>&1
-   /sbin/chkconfig --del restorecond
-fi
+%_preun_service restorecond
 
 %post
-/sbin/chkconfig --add restorecond
+%_post_service restorecond
 [ -f /usr/share/selinux/devel/include/build.conf ] && /usr/bin/sepolgen-ifgen  > /dev/null 
 /usr/bin/sepolgen-ifgen  > /dev/null
 exit 0
-
-%postun
-if [ "$1" -ge "1" ]; then 
-   [ -x /sbin/service ] && /sbin/service restorecond condrestart  > /dev/null
-fi
-
