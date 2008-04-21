@@ -27,6 +27,7 @@ Patch4:	 policycoreutils-sepolgen.patch
 
 #BuildRequires: pam-devel libsepol-static >= %{libsepolver} libsemanage-devel >= %{libsemanagever} libselinux-devel >= %{libselinuxver}  libcap-devel audit-libs-devel >=  %{libauditver} gettext
 BuildRequires: pam-devel sepol-static-devel >= %{libsepolver} semanage-devel >= %{libsemanagever} selinux-devel >= %{libselinuxver}  cap-devel audit-libs-devel >=  %{libauditver} gettext
+%py_requires -d
 Requires: /bin/mount /bin/egrep /bin/awk /usr/bin/diff rpm /bin/sed 
 #Requires: libselinux >=  %{libselinuxver} libsepol >= %{libsepolver} libsemanage >= %{libsemanagever} coreutils audit-libs-python >=  %{libauditver} checkpolicy libselinux-python
 Requires: checkpolicy
@@ -174,11 +175,11 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/pam.d/newrole
 %config(noreplace) %{_sysconfdir}/pam.d/run_init
 %config(noreplace) %{_sysconfdir}/sestatus.conf
-%{_libdir}/python?.?/site-packages/seobject.py*
+%{py_platlibdir}/site-packages/seobject.py*
 %attr(755,root,root) /etc/rc.d/init.d/restorecond
 %config(noreplace) /etc/selinux/restorecond.conf
-%dir %{_libdir}/python?.?/site-packages/sepolgen
-%{_libdir}/python?.?/site-packages/sepolgen/*
+%dir %{py_platlibdir}/site-packages/sepolgen
+%{py_platlibdir}/site-packages/sepolgen/*
 %dir  /var/lib/sepolgen
 /var/lib/sepolgen/perm_map
 
