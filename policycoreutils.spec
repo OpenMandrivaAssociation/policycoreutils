@@ -2,11 +2,11 @@
 %define	libsepolver	2.0.19-1
 %define	libsemanagever	2.0.5-1
 %define	libselinuxver	2.0.46-5
-%define	sepolgenver	1.0.11
+%define	sepolgenver	1.0.12
 Summary: SELinux policy core utilities
 Name:	 policycoreutils
-Version: 2.0.46
-Release: %mkrel 2
+Version: 2.0.52
+Release: %mkrel 1
 License: GPLv2+
 Group:	 System/Base
 Source:	 http://www.nsa.gov/selinux/archives/policycoreutils-%{version}.tgz
@@ -21,14 +21,13 @@ Source7: selinux-polgengui.console
 Source8: policycoreutils_man_ru2.tar.bz2
 Patch:	 policycoreutils-rhat.patch
 Patch1:	 policycoreutils-po.patch
-#Patch2: policycoreutils-sepolgen.patch
 Patch3:	 policycoreutils-gui.patch
 Patch4:	 policycoreutils-sepolgen.patch
 
 #BuildRequires: pam-devel libsepol-static >= %{libsepolver} libsemanage-devel >= %{libsemanagever} libselinux-devel >= %{libselinuxver}  libcap-devel audit-libs-devel >=  %{libauditver} gettext
 BuildRequires: pam-devel sepol-static-devel >= %{libsepolver} semanage-devel >= %{libsemanagever} selinux-devel >= %{libselinuxver}  cap-devel audit-libs-devel >=  %{libauditver} gettext
 %py_requires -d
-Requires: /bin/mount /bin/egrep /bin/awk /usr/bin/diff rpm /bin/sed 
+Requires: /bin/mount /bin/egrep /bin/awk %{_bindir}/diff rpm /bin/sed 
 #Requires: libselinux >=  %{libselinuxver} libsepol >= %{libsepolver} libsemanage >= %{libsemanagever} coreutils audit-libs-python >=  %{libauditver} checkpolicy libselinux-python
 Requires: checkpolicy
 #Requires(post): /sbin/service /sbin/chkconfig 
@@ -57,7 +56,6 @@ context.
 %setup -q -a 1 
 %patch -p1 -b .rhat
 %patch1 -p1 -b .rhatpo
-#%patch2 -p1 -b .sepolgen
 %patch3 -p1 -b .gui
 %patch4 -p1 -b .sepolgen
 
@@ -68,6 +66,7 @@ make -C sepolgen-%{sepolgenver} LSPP_PRIV=y LIBDIR="%{_libdir}" CFLAGS="%{optfla
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/etc/rc.d/init.d
+mkdir -p %{buildroot}/var/lib/selinux
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}/sbin
@@ -117,8 +116,10 @@ Group: System/Base
 Requires: policycoreutils = %{version}-%{release} 
 #Requires: gnome-python2, pygtk2, pygtk2-libglade, gnome-python2-canvas 
 Requires: gnome-python, pygtk2, python-gtk-glade, gnome-python-canvas
-#Requires: usermode, rhpl
-Requires: usermode-consoleonly, rhpl
+#Requires: usermode
+Requires: usermode-consoleonly
+Requires: setools-console
+Requires: selinux-policy-devel
 Requires: python >= 2.4
 BuildRequires: desktop-file-utils
 
@@ -181,6 +182,7 @@ rm -rf %{buildroot}
 %dir %{py_platlibdir}/site-packages/sepolgen
 %{py_platlibdir}/site-packages/sepolgen/*
 %dir  /var/lib/sepolgen
+%dir  /var/lib/selinux
 /var/lib/sepolgen/perm_map
 
 %preun
@@ -188,6 +190,5 @@ rm -rf %{buildroot}
 
 %post
 %_post_service restorecond
-[ -f /usr/share/selinux/devel/include/build.conf ] && /usr/bin/sepolgen-ifgen  > /dev/null 
-/usr/bin/sepolgen-ifgen  > /dev/null
+[ -f %{_datadir}/selinux/devel/include/build.conf ] && %{_bindir}/sepolgen-ifgen  > /dev/null 
 exit 0
