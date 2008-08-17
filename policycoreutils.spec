@@ -1,11 +1,11 @@
-%define	libauditver	1.4.2-1
-%define	libsepolver	2.0.19-1
-%define	libsemanagever	2.0.5-1
-%define	libselinuxver	2.0.46-5
-%define	sepolgenver	1.0.12
+%define libauditver     1.4.2-1
+%define libsepolver     2.0.19-1
+%define libsemanagever  2.0.5-1
+%define libselinuxver   2.0.46-5
+%define	sepolgenver	1.0.13
 Summary: SELinux policy core utilities
 Name:	 policycoreutils
-Version: 2.0.52
+Version: 2.0.54
 Release: %mkrel 1
 License: GPLv2+
 Group:	 System/Base
@@ -60,8 +60,8 @@ context.
 %patch4 -p1 -b .sepolgen
 
 %build
-make LSPP_PRIV=y LIBDIR="%{_libdir}" CFLAGS="%{optflags} -fPIE" LDFLAGS="-pie -Wl,-z,relro" all 
-make -C sepolgen-%{sepolgenver} LSPP_PRIV=y LIBDIR="%{_libdir}" CFLAGS="%{optflags} -fPIE" LDFLAGS="-pie -Wl,-z,relro" all 
+make LSPP_PRIV=y LIBDIR="%{_libdir}" CFLAGS="%{optflags} -fPIE" LDFLAGS="-pie -Wl,-z,relro" CC=gcc all 
+make -C sepolgen-%{sepolgenver} LSPP_PRIV=y LIBDIR="%{_libdir}" CFLAGS="%{optflags} -fPIE" LDFLAGS="-pie -Wl,-z,relro" CC=gcc all 
 
 %install
 rm -rf %{buildroot}
