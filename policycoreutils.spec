@@ -5,7 +5,7 @@
 %define	sepolgenver	1.0.13
 Summary: SELinux policy core utilities
 Name:	 policycoreutils
-Version: 2.0.54
+Version: 2.0.57
 Release: %mkrel 1
 License: GPLv2+
 Group:	 System/Base
