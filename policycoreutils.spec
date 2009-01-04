@@ -1,11 +1,11 @@
-%define libauditver     1.4.2-1
-%define libsepolver     2.0.19-1
-%define libsemanagever  2.0.5-1
-%define libselinuxver   2.0.46-5
-%define	sepolgenver	1.0.13
+%define libauditver     1.4.2
+%define libsepolver     2.0.19
+%define libsemanagever  2.0.5
+%define libselinuxver   2.0.76
+%define	sepolgenver	1.0.14
 Summary: SELinux policy core utilities
 Name:	 policycoreutils
-Version: 2.0.59
+Version: 2.0.60
 Release: %mkrel 1
 License: GPLv2+
 Group:	 System/Base
@@ -27,10 +27,10 @@ Patch4:	 policycoreutils-sepolgen.patch
 #BuildRequires: pam-devel libsepol-static >= %{libsepolver} libsemanage-devel >= %{libsemanagever} libselinux-devel >= %{libselinuxver}  libcap-devel audit-libs-devel >=  %{libauditver} gettext
 BuildRequires: pam-devel sepol-static-devel >= %{libsepolver} semanage-devel >= %{libsemanagever} selinux-devel >= %{libselinuxver}  cap-devel audit-libs-devel >=  %{libauditver} gettext
 %py_requires -d
-Requires: /bin/mount /bin/egrep /bin/awk %{_bindir}/diff rpm /bin/sed 
+Requires: /bin/mount /bin/egrep /bin/awk %{_bindir}/diff rpm /bin/sed
 #Requires: libselinux >=  %{libselinuxver} libsepol >= %{libsepolver} libsemanage >= %{libsemanagever} coreutils audit-libs-python >=  %{libauditver} checkpolicy libselinux-python
 Requires: checkpolicy
-#Requires(post): /sbin/service /sbin/chkconfig 
+#Requires(post): /sbin/service /sbin/chkconfig
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -53,15 +53,15 @@ to switch roles, and run_init to run /etc/init.d scripts in the proper
 context.
 
 %prep
-%setup -q -a 1 
+%setup -q -a 1
 %patch -p1 -b .rhat
 %patch1 -p1 -b .rhatpo
 %patch3 -p1 -b .gui
 %patch4 -p1 -b .sepolgen
 
 %build
-make LSPP_PRIV=y LIBDIR="%{_libdir}" CFLAGS="%{optflags} -fPIE" LDFLAGS="-pie -Wl,-z,relro" CC=gcc all 
-make -C sepolgen-%{sepolgenver} LSPP_PRIV=y LIBDIR="%{_libdir}" CFLAGS="%{optflags} -fPIE" LDFLAGS="-pie -Wl,-z,relro" CC=gcc all 
+make LSPP_PRIV=y LIBDIR="%{_libdir}" CFLAGS="%{optflags} -fPIE" LDFLAGS="-pie -Wl,-z,relro" CC=gcc all
+make -C sepolgen-%{sepolgenver} LSPP_PRIV=y LIBDIR="%{_libdir}" CFLAGS="%{optflags} -fPIE" LDFLAGS="-pie -Wl,-z,relro" CC=gcc all
 
 %install
 rm -rf %{buildroot}
@@ -98,12 +98,12 @@ desktop-file-install --vendor "" \
 %find_lang %{name}
 
 %package newrole
-Summary: The newrole application for RBAC/MLS 
+Summary: The newrole application for RBAC/MLS
 Group: System/Base
-Requires: policycoreutils = %{version}-%{release} 
+Requires: policycoreutils = %{version}-%{release}
 
 %description newrole
-RBAC/MLS policy machines require newrole as a way of changing the role 
+RBAC/MLS policy machines require newrole as a way of changing the role
 or level of a logged in user.
 
 %files newrole
@@ -113,8 +113,8 @@ or level of a logged in user.
 %package gui
 Summary: SELinux configuration GUI
 Group: System/Base
-Requires: policycoreutils = %{version}-%{release} 
-#Requires: gnome-python2, pygtk2, pygtk2-libglade, gnome-python2-canvas 
+Requires: policycoreutils = %{version}-%{release}
+#Requires: gnome-python2, pygtk2, pygtk2-libglade, gnome-python2-canvas
 Requires: gnome-python, pygtk2, python-gtk-glade, gnome-python-canvas
 #Requires: usermode
 Requires: usermode-consoleonly
@@ -190,5 +190,5 @@ rm -rf %{buildroot}
 
 %post
 %_post_service restorecond
-[ -f %{_datadir}/selinux/devel/include/build.conf ] && %{_bindir}/sepolgen-ifgen  > /dev/null 
+[ -f %{_datadir}/selinux/devel/include/build.conf ] && %{_bindir}/sepolgen-ifgen  > /dev/null
 exit 0
