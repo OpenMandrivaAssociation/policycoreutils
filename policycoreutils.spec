@@ -6,7 +6,7 @@
 Summary: SELinux policy core utilities
 Name:	 policycoreutils
 Version: 2.0.61
-Release: %mkrel 1
+Release: %mkrel 2
 License: GPLv2+
 Group:	 System/Base
 Source:	 http://www.nsa.gov/selinux/archives/policycoreutils-%{version}.tgz
@@ -115,9 +115,8 @@ Summary: SELinux configuration GUI
 Group: System/Base
 Requires: policycoreutils = %{version}-%{release}
 #Requires: gnome-python2, pygtk2, pygtk2-libglade, gnome-python2-canvas
-Requires: gnome-python, pygtk2, python-gtk-glade, gnome-python-canvas
-#Requires: usermode
-Requires: usermode-consoleonly
+Requires: gnome-python, pygtk+2.0-libglade gnome-python-canvas
+Requires: usermode
 Requires: setools-console
 Requires: selinux-policy-devel
 Requires: python >= 2.4
