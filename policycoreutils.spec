@@ -6,7 +6,7 @@
 Summary: SELinux policy core utilities
 Name:	 policycoreutils
 Version: 2.0.61
-Release: %mkrel 3
+Release: %mkrel 4
 License: GPLv2+
 Group:	 System/Base
 Source:	 http://www.nsa.gov/selinux/archives/policycoreutils-%{version}.tgz
