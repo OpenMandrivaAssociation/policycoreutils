@@ -1,0 +1,9 @@
+diff --exclude-from=exclude --exclude=sepolgen-1.0.13 --exclude=gui --exclude=po -N -u -r nsapolicycoreutils/Makefile policycoreutils-2.0.56/Makefile
+--- nsapolicycoreutils/Makefile	2008-08-28 09:34:24.000000000 -0400
++++ policycoreutils-2.0.56/Makefile	2008-10-01 15:18:10.000000000 -0400
+@@ -1,4 +1,4 @@
+-SUBDIRS = setfiles semanage load_policy newrole run_init secon audit2allow audit2why scripts sestatus semodule_package semodule semodule_link semodule_expand semodule_deps setsebool po
++SUBDIRS = setfiles semanage load_policy newrole run_init secon audit2allow audit2why scripts sestatus semodule_package semodule semodule_link semodule_expand semodule_deps setsebool po gui
+ 
+ INOTIFYH = $(shell ls /usr/include/sys/inotify.h 2>/dev/null)
+ 
