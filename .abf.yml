@@ -1,10 +1,4 @@
 sources:
-  "policycoreutils-2.0.61.tgz:"	6a365ecdd6a4373c647c37d8dc93675fa0871901
-  "policycoreutils_man_ru2.tar.bz2:"	3ca27e84d9d861891283c96e11756474d02e0fe1
-  "selinux-polgengui.console:"	02f78b817aa7f14ea1e3de82a7b9248966af3afc
-  "selinux-polgengui.desktop:"	38f66e1aea354310bfa17b7f8f987e19de256af4
-  "sepolgen-1.0.14.tgz:"	935e4c2700ba9152e3cd9b6df177edda8c543c52
-  "system-config-selinux.console:"	cc28496e9dc098d3efea7312a74c091fbf5c0281
-  "system-config-selinux.desktop:"	2332478e0eb45a989e6f736e24a0c6ecf09e14f1
-  "system-config-selinux.pam:"	585f0630df375e40187b794b1b636d19ab5d0ed6
-  "system-config-selinux.png:"	611a5d497efaddd45ec0dcc3e9b2e5b0f81ebc41
+  "policycoreutils-2.0.61.tgz": 6a365ecdd6a4373c647c37d8dc93675fa0871901
+  "policycoreutils_man_ru2.tar.bz2": 3ca27e84d9d861891283c96e11756474d02e0fe1
+  "sepolgen-1.0.14.tgz": 935e4c2700ba9152e3cd9b6df177edda8c543c52

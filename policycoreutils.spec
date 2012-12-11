@@ -6,7 +6,7 @@
 Summary: SELinux policy core utilities
 Name:	 policycoreutils
 Version: 2.0.61
-Release: %mkrel 6
+Release: 7
 License: GPLv2+
 Group:	 System/Base
 Source:	 http://www.nsa.gov/selinux/archives/policycoreutils-%{version}.tgz
@@ -108,7 +108,6 @@ or level of a logged in user.
 
 %files newrole
 %attr(4755,root,root) %{_bindir}/newrole
-%{_mandir}/man1/newrole.1*
 
 %package gui
 Summary: SELinux configuration GUI
@@ -190,3 +189,9 @@ rm -rf %{buildroot}
 %_post_service restorecond
 [ -f %{_datadir}/selinux/devel/include/build.conf ] && %{_bindir}/sepolgen-ifgen  > /dev/null
 exit 0
+
+
+%changelog
+* Sat Nov 06 2010 Funda Wang <fwang@mandriva.org> 2.0.61-6mdv2011.0
++ Revision: 593925
+- rebuild for py2.7
