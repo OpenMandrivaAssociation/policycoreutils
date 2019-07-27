@@ -237,11 +237,11 @@ Provides: %{name}-python3 = %{version}-%{release}
 Obsoletes: %{name}-python3 < %{version}-%{release}
 Summary: SELinux policy core python3 interfaces
 Requires:policycoreutils = %{version}-%{release}
-Requires:python3-libsemanage >= %{libsemanagever} python3-libselinux
+Requires:python-libsemanage >= %{libsemanagever} python-libselinux
 # no python3-audit-libs yet
-Requires:audit-libs-python3 >=  %{libauditver}
+Requires: python-audit >=  %{libauditver}
 Requires: checkpolicy
-Requires: python3-setools >= 4.1.1
+Requires: python-setools >= 4.1.1
 BuildArch: noarch
 
 %description -n python3-policycoreutils
@@ -337,7 +337,7 @@ The policycoreutils-devel package contains the management tools use to develop p
 %package sandbox
 Summary: SELinux sandbox utilities
 Requires: python3-policycoreutils = %{version}-%{release}
-Requires: xorg-x11-server-Xephyr >= 1.14.1-2 /usr/bin/rsync /usr/bin/xmodmap
+Requires: x11-server-xephyr /usr/bin/rsync /usr/bin/xmodmap
 Requires: matchbox-window-manager
 BuildRequires: libcap-ng-devel
 
@@ -370,7 +370,6 @@ or level of a logged in user.
 Summary: SELinux configuration GUI
 Requires: policycoreutils-devel = %{version}-%{release}, python3-policycoreutils = %{version}-%{release}
 Requires: policycoreutils-dbus = %{version}-%{release}
-Requires: gtk3, python3-gobject
 BuildRequires: desktop-file-utils
 BuildArch: noarch
 
