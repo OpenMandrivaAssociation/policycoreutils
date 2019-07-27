@@ -1,4 +1,14 @@
 sources:
-  "policycoreutils-2.0.61.tgz": 6a365ecdd6a4373c647c37d8dc93675fa0871901
-  "policycoreutils_man_ru2.tar.bz2": 3ca27e84d9d861891283c96e11756474d02e0fe1
-  "sepolgen-1.0.14.tgz": 935e4c2700ba9152e3cd9b6df177edda8c543c52
+  gui-po.tgz: 1db2cb87ee7f88c9d89b7be9f1aca6cf223a4690
+  policycoreutils-2.9.tar.gz: 6e64d9a38fb516738023eb429eef29af5383f443
+  policycoreutils-po.tgz: 7222ff0a08ce39463f2a921fb771190368c9723f
+  python-po.tgz: 196de1237b6f2fa223724c0140789beccfc67a0b
+  restorecond-2.9.tar.gz: 0a34ef54394972870203832c8ce52d4405bd5330
+  sandbox-po.tgz: 720a6c214a7681fda319f19218f0bf5ceea22a27
+  selinux-dbus-2.9.tar.gz: 8645509cdfc433278c2e4d29ee8f511625c7edcc
+  selinux-gui-2.9.tar.gz: 5c155ae47692389d9fabaa154195e7f978f2a3f0
+  selinux-python-2.9.tar.gz: 660e1ab824ef80f7a69f0b70f61e231957fd398e
+  selinux-sandbox-2.9.tar.gz: 0e208cad193021ad17a445b76b72af3fef8db999
+  semodule-utils-2.9.tar.gz: a4414223e60bb664ada4824e54f8d36ab208d599
+  sepolicy-icons.tgz: d849fa76cc3ef4a26047d8a69fef3a55d2f3097f
+  system-config-selinux.png: 611a5d497efaddd45ec0dcc3e9b2e5b0f81ebc41

@@ -1,0 +1,512 @@
+diff --git selinux-python-2.9/Makefile selinux-python-2.9/Makefile
+index 9b66d52..00312db 100644
+--- selinux-python-2.9/Makefile
++++ selinux-python-2.9/Makefile
+@@ -1,4 +1,4 @@
+-SUBDIRS = sepolicy audit2allow semanage sepolgen chcat
++SUBDIRS = sepolicy audit2allow semanage sepolgen chcat po
+ 
+ all install relabel clean indent test:
+ 	@for subdir in $(SUBDIRS); do \
+diff --git selinux-python-2.9/chcat/chcat selinux-python-2.9/chcat/chcat
+index ba39868..df2509f 100755
+--- selinux-python-2.9/chcat/chcat
++++ selinux-python-2.9/chcat/chcat
+@@ -30,7 +30,7 @@ import getopt
+ import selinux
+ import seobject
+ 
+-PROGNAME = "policycoreutils"
++PROGNAME = "selinux-python"
+ try:
+     import gettext
+     kwargs = {}
+diff --git selinux-python-2.9/po/Makefile selinux-python-2.9/po/Makefile
+new file mode 100644
+index 0000000..4e052d5
+--- /dev/null
++++ selinux-python-2.9/po/Makefile
+@@ -0,0 +1,83 @@
++#
++# Makefile for the PO files (translation) catalog
++#
++
++PREFIX ?= /usr
++
++# What is this package?
++NLSPACKAGE	= python
++POTFILE		= $(NLSPACKAGE).pot
++INSTALL		= /usr/bin/install -c -p
++INSTALL_DATA	= $(INSTALL) -m 644
++INSTALL_DIR	= /usr/bin/install -d
++
++# destination directory
++INSTALL_NLS_DIR = $(PREFIX)/share/locale
++
++# PO catalog handling
++MSGMERGE	= msgmerge
++MSGMERGE_FLAGS	= -q
++XGETTEXT	= xgettext --default-domain=$(NLSPACKAGE)
++MSGFMT		= msgfmt
++
++# All possible linguas
++PO_LINGUAS := $(sort $(patsubst %.po,%,$(wildcard *.po)))
++
++# Only the files matching what the user has set in LINGUAS
++USER_LINGUAS := $(filter $(patsubst %,%%,$(LINGUAS)),$(PO_LINGUAS))
++
++# if no valid LINGUAS, build all languages
++USE_LINGUAS := $(if $(USER_LINGUAS),$(USER_LINGUAS),$(PO_LINGUAS))
++
++POFILES		= $(patsubst %,%.po,$(USE_LINGUAS))
++MOFILES		= $(patsubst %.po,%.mo,$(POFILES))
++POTFILES  = $(shell cat POTFILES)
++
++#default:: clean
++
++all::  $(MOFILES)
++
++$(POTFILE): $(POTFILES) 
++	$(XGETTEXT) -L Python --keyword=_ --keyword=N_ $(POTFILES)
++	$(XGETTEXT) -j --keyword=_ --keyword=N_ ../sepolicy/sepolicy/sepolicy.glade
++	@if cmp -s $(NLSPACKAGE).po $(POTFILE); then \
++	    rm -f $(NLSPACKAGE).po; \
++	else \
++	    mv -f $(NLSPACKAGE).po $(POTFILE); \
++	fi; \
++
++
++refresh-po: Makefile
++	for cat in $(POFILES); do \
++		lang=`basename $$cat .po`; \
++		if $(MSGMERGE) $(MSGMERGE_FLAGS) $$lang.po $(POTFILE) > $$lang.pot ; then \
++			mv -f $$lang.pot $$lang.po ; \
++			echo "$(MSGMERGE) of $$lang succeeded" ; \
++		else \
++			echo "$(MSGMERGE) of $$lang failed" ; \
++			rm -f $$lang.pot ; \
++		fi \
++	done
++
++clean:
++	@rm -fv *mo *~ .depend
++	@rm -rf tmp
++
++install: $(MOFILES)
++	@for n in $(MOFILES); do \
++	    l=`basename $$n .mo`; \
++	    $(INSTALL_DIR) $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES; \
++	    $(INSTALL_DATA) --verbose $$n $(DESTDIR)$(INSTALL_NLS_DIR)/$$l/LC_MESSAGES/selinux-$(NLSPACKAGE).mo; \
++	done
++
++%.mo: %.po
++	$(MSGFMT) -o $@ $<
++report:
++	@for cat in $(wildcard *.po); do \
++                echo -n "$$cat: "; \
++                msgfmt -v --statistics -o /dev/null $$cat; \
++        done
++
++.PHONY: missing depend
++
++relabel:
+diff --git selinux-python-2.9/po/POTFILES selinux-python-2.9/po/POTFILES
+new file mode 100644
+index 0000000..128eb87
+--- /dev/null
++++ selinux-python-2.9/po/POTFILES
+@@ -0,0 +1,10 @@
++../audit2allow/audit2allow
++../chcat/chcat
++../semanage/semanage
++../semanage/seobject.py
++../sepolgen/src/sepolgen/interfaces.py
++../sepolicy/sepolicy/generate.py
++../sepolicy/sepolicy/gui.py
++../sepolicy/sepolicy/__init__.py
++../sepolicy/sepolicy/interface.py
++../sepolicy/sepolicy.py
+diff --git selinux-python-2.9/semanage/semanage selinux-python-2.9/semanage/semanage
+index 144cc00..56db3e0 100644
+--- selinux-python-2.9/semanage/semanage
++++ selinux-python-2.9/semanage/semanage
+@@ -27,7 +27,7 @@ import traceback
+ import argparse
+ import seobject
+ import sys
+-PROGNAME = "policycoreutils"
++PROGNAME = "selinux-python"
+ try:
+     import gettext
+     kwargs = {}
+diff --git selinux-python-2.9/semanage/seobject.py selinux-python-2.9/semanage/seobject.py
+index 13fdf53..58497e3 100644
+--- selinux-python-2.9/semanage/seobject.py
++++ selinux-python-2.9/semanage/seobject.py
+@@ -29,10 +29,10 @@ import sys
+ import stat
+ import socket
+ from semanage import *
+-PROGNAME = "policycoreutils"
++PROGNAME = "selinux-python"
+ import sepolicy
+ import setools
+-from IPy import IP
++import ipaddress
+ 
+ try:
+     import gettext
+@@ -1851,13 +1851,13 @@ class nodeRecords(semanageRecords):
+ 
+         # verify valid comination
+         if len(mask) == 0 or mask[0] == "/":
+-            i = IP(addr + mask)
+-            newaddr = i.strNormal(0)
+-            newmask = str(i.netmask())
+-            if newmask == "0.0.0.0" and i.version() == 6:
++            i = ipaddress.ip_network(addr + mask)
++            newaddr = str(i.network_address)
++            newmask = str(i.netmask)
++            if newmask == "0.0.0.0" and i.version == 6:
+                 newmask = "::"
+ 
+-            protocol = "ipv%d" % i.version()
++            protocol = "ipv%d" % i.version
+ 
+         try:
+             newprotocol = self.protocol.index(protocol)
+diff --git selinux-python-2.9/sepolgen/src/sepolgen/sepolgeni18n.py selinux-python-2.9/sepolgen/src/sepolgen/sepolgeni18n.py
+index 998c435..56ebd80 100644
+--- selinux-python-2.9/sepolgen/src/sepolgen/sepolgeni18n.py
++++ selinux-python-2.9/sepolgen/src/sepolgen/sepolgeni18n.py
+@@ -19,7 +19,7 @@
+ 
+ try: 
+     import gettext
+-    t = gettext.translation( 'yumex' )
++    t = gettext.translation( 'selinux-python' )
+     _ = t.gettext
+ except:
+     def _(str):
+diff --git selinux-python-2.9/sepolicy/sepolicy.py selinux-python-2.9/sepolicy/sepolicy.py
+index 1934cd8..8bd6a57 100755
+--- selinux-python-2.9/sepolicy/sepolicy.py
++++ selinux-python-2.9/sepolicy/sepolicy.py
+@@ -27,7 +27,7 @@ import selinux
+ import sepolicy
+ from sepolicy import get_os_version, get_conditionals, get_conditionals_format_text
+ import argparse
+-PROGNAME = "policycoreutils"
++PROGNAME = "selinux-python"
+ try:
+     import gettext
+     kwargs = {}
+diff --git selinux-python-2.9/sepolicy/sepolicy/__init__.py selinux-python-2.9/sepolicy/sepolicy/__init__.py
+index 6aed31b..b6ca57c 100644
+--- selinux-python-2.9/sepolicy/sepolicy/__init__.py
++++ selinux-python-2.9/sepolicy/sepolicy/__init__.py
+@@ -13,7 +13,7 @@ import os
+ import re
+ import gzip
+ 
+-PROGNAME = "policycoreutils"
++PROGNAME = "selinux-python"
+ try:
+     import gettext
+     kwargs = {}
+@@ -1209,27 +1209,14 @@ def boolean_desc(boolean):
+ 
+ 
+ def get_os_version():
+-    os_version = ""
+-    pkg_name = "selinux-policy"
++    system_release = ""
+     try:
+-        try:
+-            from commands import getstatusoutput
+-        except ImportError:
+-            from subprocess import getstatusoutput
+-        rc, output = getstatusoutput("rpm -q '%s'" % pkg_name)
+-        if rc == 0:
+-            os_version = output.split(".")[-2]
+-    except:
+-        os_version = ""
+-
+-    if os_version[0:2] == "fc":
+-        os_version = "Fedora" + os_version[2:]
+-    elif os_version[0:2] == "el":
+-        os_version = "RHEL" + os_version[2:]
+-    else:
+-        os_version = ""
++        with open('/etc/system-release') as f:
++            system_release = f.readline().rstrip()
++    except IOError:
++        system_release = "Misc"
+ 
+-    return os_version
++    return system_release
+ 
+ 
+ def reinit():
+diff --git selinux-python-2.9/sepolicy/sepolicy/generate.py selinux-python-2.9/sepolicy/sepolicy/generate.py
+index 019e783..93caede 100644
+--- selinux-python-2.9/sepolicy/sepolicy/generate.py
++++ selinux-python-2.9/sepolicy/sepolicy/generate.py
+@@ -49,7 +49,7 @@ import sepolgen.defaults as defaults
+ ##
+ ## I18N
+ ##
+-PROGNAME = "policycoreutils"
++PROGNAME = "selinux-python"
+ try:
+     import gettext
+     kwargs = {}
+@@ -100,7 +100,9 @@ def get_all_ports():
+     for p in sepolicy.info(sepolicy.PORT):
+         if p['type'] == "reserved_port_t" or \
+                 p['type'] == "port_t" or \
+-                p['type'] == "hi_reserved_port_t":
++                p['type'] == "hi_reserved_port_t" or \
++                p['type'] == "ephemeral_port_t" or \
++                p['type'] == "unreserved_port_t":
+             continue
+         dict[(p['low'], p['high'], p['protocol'])] = (p['type'], p.get('range'))
+     return dict
+diff --git selinux-python-2.9/sepolicy/sepolicy/gui.py selinux-python-2.9/sepolicy/sepolicy/gui.py
+index 00fd7a1..805cee6 100644
+--- selinux-python-2.9/sepolicy/sepolicy/gui.py
++++ selinux-python-2.9/sepolicy/sepolicy/gui.py
+@@ -41,7 +41,7 @@ import os
+ import re
+ import unicodedata
+ 
+-PROGNAME = "policycoreutils"
++PROGNAME = "selinux-python"
+ try:
+     import gettext
+     kwargs = {}
+diff --git selinux-python-2.9/sepolicy/sepolicy/interface.py selinux-python-2.9/sepolicy/sepolicy/interface.py
+index 583091a..e2b8d23 100644
+--- selinux-python-2.9/sepolicy/sepolicy/interface.py
++++ selinux-python-2.9/sepolicy/sepolicy/interface.py
+@@ -30,7 +30,7 @@ __all__ = ['get_all_interfaces', 'get_interfaces_from_xml', 'get_admin', 'get_us
+ ##
+ ## I18N
+ ##
+-PROGNAME = "policycoreutils"
++PROGNAME = "selinux-python"
+ try:
+     import gettext
+     kwargs = {}
+diff --git selinux-python-2.9/sepolicy/sepolicy/manpage.py selinux-python-2.9/sepolicy/sepolicy/manpage.py
+index 1d36796..67d3930 100755
+--- selinux-python-2.9/sepolicy/sepolicy/manpage.py
++++ selinux-python-2.9/sepolicy/sepolicy/manpage.py
+@@ -125,8 +125,33 @@ def gen_domains():
+     domains.sort()
+     return domains
+ 
+-types = None
+ 
++exec_types = None
++
++def _gen_exec_types():
++    global exec_types
++    if exec_types is None:
++        exec_types = next(sepolicy.info(sepolicy.ATTRIBUTE, "exec_type"))["types"]
++    return exec_types
++
++entry_types = None
++
++def _gen_entry_types():
++    global entry_types
++    if entry_types is None:
++        entry_types = next(sepolicy.info(sepolicy.ATTRIBUTE, "entry_type"))["types"]
++    return entry_types
++
++mcs_constrained_types = None
++
++def _gen_mcs_constrained_types():
++    global mcs_constrained_types
++    if mcs_constrained_types is None:
++        mcs_constrained_types = next(sepolicy.info(sepolicy.ATTRIBUTE, "mcs_constrained_type"))
++    return mcs_constrained_types
++
++
++types = None
+ 
+ def _gen_types():
+     global types
+@@ -149,10 +174,6 @@ def prettyprint(f, trim):
+ manpage_domains = []
+ manpage_roles = []
+ 
+-fedora_releases = ["Fedora17", "Fedora18"]
+-rhel_releases = ["RHEL6", "RHEL7"]
+-
+-
+ def get_alphabet_manpages(manpage_list):
+     alphabet_manpages = dict.fromkeys(string.ascii_letters, [])
+     for i in string.ascii_letters:
+@@ -182,7 +203,7 @@ def convert_manpage_to_html(html_manpage, manpage):
+ class HTMLManPages:
+ 
+     """
+-            Generate a HHTML Manpages on an given SELinux domains
++            Generate a HTML Manpages on an given SELinux domains
+     """
+ 
+     def __init__(self, manpage_roles, manpage_domains, path, os_version):
+@@ -190,9 +211,9 @@ class HTMLManPages:
+         self.manpage_domains = get_alphabet_manpages(manpage_domains)
+         self.os_version = os_version
+         self.old_path = path + "/"
+-        self.new_path = self.old_path + self.os_version + "/"
++        self.new_path = self.old_path
+ 
+-        if self.os_version in fedora_releases or self.os_version in rhel_releases:
++        if self.os_version:
+             self.__gen_html_manpages()
+         else:
+             print("SELinux HTML man pages can not be generated for this %s" % os_version)
+@@ -201,7 +222,6 @@ class HTMLManPages:
+     def __gen_html_manpages(self):
+         self._write_html_manpage()
+         self._gen_index()
+-        self._gen_body()
+         self._gen_css()
+ 
+     def _write_html_manpage(self):
+@@ -219,67 +239,21 @@ class HTMLManPages:
+                     convert_manpage_to_html((self.new_path + r.rsplit("_selinux", 1)[0] + ".html"), self.old_path + r)
+ 
+     def _gen_index(self):
+-        index = self.old_path + "index.html"
+-        fd = open(index, 'w')
+-        fd.write("""
+-<html>
+-<head>
+-    <link rel=stylesheet type="text/css" href="style.css" title="style">
+-    <title>SELinux man pages online</title>
+-</head>
+-<body>
+-<h1>SELinux man pages</h1>
+-<br></br>
+-Fedora or Red Hat Enterprise Linux Man Pages.</h2>
+-<br></br>
+-<hr>
+-<h3>Fedora</h3>
+-<table><tr>
+-<td valign="middle">
+-</td>
+-</tr></table>
+-<pre>
+-""")
+-        for f in fedora_releases:
+-            fd.write("""
+-<a href=%s/%s.html>%s</a> - SELinux man pages for %s """ % (f, f, f, f))
+-
+-        fd.write("""
+-</pre>
+-<hr>
+-<h3>RHEL</h3>
+-<table><tr>
+-<td valign="middle">
+-</td>
+-</tr></table>
+-<pre>
+-""")
+-        for r in rhel_releases:
+-            fd.write("""
+-<a href=%s/%s.html>%s</a> - SELinux man pages for %s """ % (r, r, r, r))
+-
+-        fd.write("""
+-</pre>
+-	""")
+-        fd.close()
+-        print("%s has been created" % index)
+-
+-    def _gen_body(self):
+         html = self.new_path + self.os_version + ".html"
+         fd = open(html, 'w')
+         fd.write("""
+ <html>
+ <head>
+-	<link rel=stylesheet type="text/css" href="../style.css" title="style">
+-	<title>Linux man-pages online for Fedora18</title>
++	<link rel=stylesheet type="text/css" href="style.css" title="style">
++	<title>SELinux man pages</title>
+ </head>
+ <body>
+-<h1>SELinux man pages for Fedora18</h1>
++<h1>SELinux man pages for %s</h1>
+ <hr>
+ <table><tr>
+ <td valign="middle">
+ <h3>SELinux roles</h3>
+-""")
++""" % self.os_version)
+         for letter in self.manpage_roles:
+             if len(self.manpage_roles[letter]):
+                 fd.write("""
+@@ -423,6 +397,9 @@ class ManPage:
+         self.all_file_types = sepolicy.get_all_file_types()
+         self.role_allows = sepolicy.get_all_role_allows()
+         self.types = _gen_types()
++        self.exec_types = _gen_exec_types()
++        self.entry_types = _gen_entry_types()
++        self.mcs_constrained_types = _gen_mcs_constrained_types()
+ 
+         if self.source_files:
+             self.fcpath = self.root + "file_contexts"
+@@ -735,10 +712,13 @@ Default Defined Ports:""")
+ 
+     def _file_context(self):
+         flist = []
++        flist_non_exec = []
+         mpaths = []
+         for f in self.all_file_types:
+             if f.startswith(self.domainname):
+                 flist.append(f)
++                if not f in self.exec_types or not f in self.entry_types:
++                    flist_non_exec.append(f)
+                 if f in self.fcdict:
+                     mpaths = mpaths + self.fcdict[f]["regex"]
+         if len(mpaths) == 0:
+@@ -790,19 +770,20 @@ SELinux %(domainname)s policy is very flexible allowing users to setup their %(d
+ .PP
+ """ % {'domainname': self.domainname, 'equiv': e, 'alt': e.split('/')[-1]})
+ 
+-        self.fd.write(r"""
++        if flist_non_exec:
++                self.fd.write(r"""
+ .PP
+ .B STANDARD FILE CONTEXT
+ 
+ SELinux defines the file context types for the %(domainname)s, if you wanted to
+ store files with these types in a diffent paths, you need to execute the semanage command to sepecify alternate labeling and then use restorecon to put the labels on disk.
+ 
+-.B semanage fcontext -a -t %(type)s '/srv/%(domainname)s/content(/.*)?'
++.B semanage fcontext -a -t %(type)s '/srv/my%(domainname)s_content(/.*)?'
+ .br
+ .B restorecon -R -v /srv/my%(domainname)s_content
+ 
+ Note: SELinux often uses regular expressions to specify labels that match multiple files.
+-""" % {'domainname': self.domainname, "type": flist[0]})
++""" % {'domainname': self.domainname, "type": flist_non_exec[-1]})
+ 
+         self.fd.write(r"""
+ .I The following file types are defined for %(domainname)s:
+@@ -973,11 +954,7 @@ All executeables with the default executable label, usually stored in /usr/bin a
+ %s""" % ", ".join(paths))
+ 
+     def _mcs_types(self):
+-        try:
+-            mcs_constrained_type = next(sepolicy.info(sepolicy.ATTRIBUTE, "mcs_constrained_type"))
+-        except StopIteration:
+-            return
+-        if self.type not in mcs_constrained_type['types']:
++        if self.type not in self.mcs_constrained_types['types']:
+             return
+         self.fd.write ("""
+ .SH "MCS Constrained"
