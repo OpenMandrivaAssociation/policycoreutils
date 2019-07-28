@@ -333,12 +333,10 @@ The policycoreutils-devel package contains the management tools use to develop p
 %{_mandir}/man8/sepolicy-transition.8*
 %{_usr}/share/bash-completion/completions/sepolicy
 
-
 %package sandbox
 Summary: SELinux sandbox utilities
 Requires: python3-policycoreutils = %{version}-%{release}
 Requires: x11-server-xephyr /usr/bin/rsync /usr/bin/xmodmap
-Requires: matchbox-window-manager
 BuildRequires: libcap-ng-devel
 
 %description sandbox
