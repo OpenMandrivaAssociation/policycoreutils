@@ -237,7 +237,7 @@ Provides: %{name}-python3 = %{version}-%{release}
 Obsoletes: %{name}-python3 < %{version}-%{release}
 Summary: SELinux policy core python3 interfaces
 Requires:policycoreutils = %{version}-%{release}
-Requires:python-libsemanage >= %{libsemanagever} python-libselinux
+Requires:python-libsemanage >= %{libsemanagever} python-selinux
 # no python3-audit-libs yet
 Requires: python-audit >=  %{libauditver}
 Requires: checkpolicy
@@ -278,7 +278,7 @@ Summary: SELinux policy core python2 utilities
 Requires:policycoreutils = %{version}-%{release}
 Requires:python2-libsemanage >= %{libsemanagever} python2-libselinux
 # no python2-audit-libs yet
-Requires:audit-libs-python2 >=  %{libauditver}
+Requires: python2-audit >=  %{libauditver}
 Obsoletes: policycoreutils < 2.0.61-2
 Requires: python2-IPy
 Requires: checkpolicy
@@ -309,7 +309,7 @@ an SELinux environment.
 %package devel
 Summary: SELinux policy core policy devel utilities
 Requires: policycoreutils-python-utils = %{version}-%{release}
-Requires: /usr/bin/make dnf
+Requires: /usr/bin/make
 Requires: selinux-policy-devel
 
 %description devel
