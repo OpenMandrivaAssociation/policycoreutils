@@ -12,7 +12,7 @@
 Summary: SELinux policy core utilities
 Name:    policycoreutils
 Version: 2.9
-Release: 1
+Release: 2
 License: GPLv2
 # https://github.com/SELinuxProject/selinux/wiki/Releases
 Source0: https://github.com/SELinuxProject/selinux/releases/download/20190315/policycoreutils-2.9.tar.gz
