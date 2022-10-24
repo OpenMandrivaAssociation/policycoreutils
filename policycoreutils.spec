@@ -56,6 +56,7 @@ BuildRequires:	sepol-static-devel >= %{libsepolver}
 BuildRequires:	semanage-static-devel >= %{libsemanagever} 
 BuildRequires:	pkgconfig(libselinux) >= %{libselinuxver}  
 BuildRequires:	pkgconfig(libcap) 
+BuildRequires:	pkgconfig(systemd)
 BuildRequires:	python-devel
 BuildRequires:	systemd
 BuildRequires:	pam-devel
