@@ -1,14 +1,11 @@
 sources:
-  gui-po.tgz: 1db2cb87ee7f88c9d89b7be9f1aca6cf223a4690
-  policycoreutils-2.9.tar.gz: 6e64d9a38fb516738023eb429eef29af5383f443
-  policycoreutils-po.tgz: 7222ff0a08ce39463f2a921fb771190368c9723f
-  python-po.tgz: 196de1237b6f2fa223724c0140789beccfc67a0b
-  restorecond-2.9.tar.gz: 0a34ef54394972870203832c8ce52d4405bd5330
-  sandbox-po.tgz: 720a6c214a7681fda319f19218f0bf5ceea22a27
-  selinux-dbus-2.9.tar.gz: 8645509cdfc433278c2e4d29ee8f511625c7edcc
-  selinux-gui-2.9.tar.gz: 5c155ae47692389d9fabaa154195e7f978f2a3f0
-  selinux-python-2.9.tar.gz: 660e1ab824ef80f7a69f0b70f61e231957fd398e
-  selinux-sandbox-2.9.tar.gz: 0e208cad193021ad17a445b76b72af3fef8db999
-  semodule-utils-2.9.tar.gz: a4414223e60bb664ada4824e54f8d36ab208d599
   sepolicy-icons.tgz: d849fa76cc3ef4a26047d8a69fef3a55d2f3097f
   system-config-selinux.png: 611a5d497efaddd45ec0dcc3e9b2e5b0f81ebc41
+  policycoreutils-3.4.tar.gz: 5c73e3389bf93b9acba4bcbde1260a6af048ffa9
+  restorecond-3.4.tar.gz: 5653d32d24918ce741536e8c2326df84287cfea7
+  selinux-3.4.tar.gz: 3c789c6783738e17f74221efa475cbb878183379
+  selinux-dbus-3.4.tar.gz: 67ab9b49b98bb6b53f33564f6fc78867229fea3b
+  selinux-gui-3.4.tar.gz: a7e19fcdd64e88bd567aa1c185c419d6ad8dc352
+  selinux-python-3.4.tar.gz: 9d9c96857ba98c951ffd75321aec22c373bfb782
+  selinux-sandbox-3.4.tar.gz: e90c292f075d04385579684e144921cf2462bf33
+  semodule-utils-3.4.tar.gz: 16eb2457e3cc92c980fb703db882d8a3b10e7526

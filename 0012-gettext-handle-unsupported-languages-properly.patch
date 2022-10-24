@@ -1,0 +1,349 @@
+From ff2aba6d202f49749cbb19a84bf0e1cdae54c5e9 Mon Sep 17 00:00:00 2001
+From: Vit Mojzis <vmojzis@redhat.com>
+Date: Fri, 24 Jun 2022 16:24:25 +0200
+Subject: [PATCH] gettext: handle unsupported languages properly
+Content-type: text/plain
+
+With "fallback=True" gettext.translation behaves the same as
+gettext.install and uses NullTranslations in case the
+translation file for given language was not found (as opposed to
+throwing an exception).
+
+Fixes:
+  # LANG is set to any "unsupported" language, e.g. en_US.UTF-8
+  $ chcat --help
+  Traceback (most recent call last):
+  File "/usr/bin/chcat", line 39, in <module>
+    t = gettext.translation(PROGNAME,
+  File "/usr/lib64/python3.9/gettext.py", line 592, in translation
+    raise FileNotFoundError(ENOENT,
+  FileNotFoundError: [Errno 2] No translation file found for domain: 'selinux-python'
+
+Signed-off-by: Vit Mojzis <vmojzis@redhat.com>
+Reviewed-by: Daniel Burgener <dburgener@linux.microsoft.com>
+Acked-by: Petr Lautrbach <plautrba@redhat.com>
+---
+ gui/booleansPage.py                          | 3 ++-
+ gui/domainsPage.py                           | 3 ++-
+ gui/fcontextPage.py                          | 3 ++-
+ gui/loginsPage.py                            | 3 ++-
+ gui/modulesPage.py                           | 3 ++-
+ gui/polgengui.py                             | 3 ++-
+ gui/portsPage.py                             | 3 ++-
+ gui/semanagePage.py                          | 3 ++-
+ gui/statusPage.py                            | 3 ++-
+ gui/system-config-selinux.py                 | 3 ++-
+ gui/usersPage.py                             | 3 ++-
+ python/chcat/chcat                           | 5 +++--
+ python/semanage/semanage                     | 3 ++-
+ python/semanage/seobject.py                  | 3 ++-
+ python/sepolgen/src/sepolgen/sepolgeni18n.py | 4 +++-
+ python/sepolicy/sepolicy.py                  | 3 ++-
+ python/sepolicy/sepolicy/__init__.py         | 3 ++-
+ python/sepolicy/sepolicy/generate.py         | 3 ++-
+ python/sepolicy/sepolicy/gui.py              | 3 ++-
+ python/sepolicy/sepolicy/interface.py        | 3 ++-
+ sandbox/sandbox                              | 3 ++-
+ 21 files changed, 44 insertions(+), 22 deletions(-)
+
+diff --git a/gui/booleansPage.py b/gui/booleansPage.py
+index 5beec58bc360..ad11a9b24c79 100644
+--- a/gui/booleansPage.py
++++ b/gui/booleansPage.py
+@@ -46,7 +46,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/domainsPage.py b/gui/domainsPage.py
+index e08f34b4d3a9..e6eadd61c1bc 100644
+--- a/gui/domainsPage.py
++++ b/gui/domainsPage.py
+@@ -38,7 +38,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/fcontextPage.py b/gui/fcontextPage.py
+index bac2bec3ebbd..767664f26ec8 100644
+--- a/gui/fcontextPage.py
++++ b/gui/fcontextPage.py
+@@ -55,7 +55,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/loginsPage.py b/gui/loginsPage.py
+index 18b93d8c9756..7e08232a90b5 100644
+--- a/gui/loginsPage.py
++++ b/gui/loginsPage.py
+@@ -37,7 +37,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/modulesPage.py b/gui/modulesPage.py
+index c546d455d4cd..02b79f150a13 100644
+--- a/gui/modulesPage.py
++++ b/gui/modulesPage.py
+@@ -38,7 +38,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/polgengui.py b/gui/polgengui.py
+index a18f1cba17b9..7a3ecd50c91c 100644
+--- a/gui/polgengui.py
++++ b/gui/polgengui.py
+@@ -71,7 +71,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/portsPage.py b/gui/portsPage.py
+index 54aa80ded327..bee2bdf17b99 100644
+--- a/gui/portsPage.py
++++ b/gui/portsPage.py
+@@ -43,7 +43,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/semanagePage.py b/gui/semanagePage.py
+index 1371d4e7dabe..efad14d9b375 100644
+--- a/gui/semanagePage.py
++++ b/gui/semanagePage.py
+@@ -30,7 +30,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/statusPage.py b/gui/statusPage.py
+index c241ef83dfa0..832849e60d60 100644
+--- a/gui/statusPage.py
++++ b/gui/statusPage.py
+@@ -43,7 +43,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/system-config-selinux.py b/gui/system-config-selinux.py
+index 1b460c99363b..9f53b7fe9020 100644
+--- a/gui/system-config-selinux.py
++++ b/gui/system-config-selinux.py
+@@ -53,7 +53,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/gui/usersPage.py b/gui/usersPage.py
+index d51bd968b77e..9acd3b844056 100644
+--- a/gui/usersPage.py
++++ b/gui/usersPage.py
+@@ -37,7 +37,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/python/chcat/chcat b/python/chcat/chcat
+index e779fcc6ebd7..952cb8187599 100755
+--- a/python/chcat/chcat
++++ b/python/chcat/chcat
+@@ -38,9 +38,10 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+-except ImportError:
++except:
+     try:
+         import builtins
+         builtins.__dict__['_'] = str
+diff --git a/python/semanage/semanage b/python/semanage/semanage
+index 8f4e44a7a9cd..f45061a601f9 100644
+--- a/python/semanage/semanage
++++ b/python/semanage/semanage
+@@ -38,7 +38,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/python/semanage/seobject.py b/python/semanage/seobject.py
+index ff8f4e9c3008..0782c082dc0c 100644
+--- a/python/semanage/seobject.py
++++ b/python/semanage/seobject.py
+@@ -42,7 +42,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/python/sepolgen/src/sepolgen/sepolgeni18n.py b/python/sepolgen/src/sepolgen/sepolgeni18n.py
+index 56ebd807c69c..1ff307d9b27d 100644
+--- a/python/sepolgen/src/sepolgen/sepolgeni18n.py
++++ b/python/sepolgen/src/sepolgen/sepolgeni18n.py
+@@ -19,7 +19,9 @@
+ 
+ try: 
+     import gettext
+-    t = gettext.translation( 'selinux-python' )
++    t = gettext.translation("selinux-python",
++                        localedir="/usr/share/locale",
++                        fallback=True)
+     _ = t.gettext
+ except:
+     def _(str):
+diff --git a/python/sepolicy/sepolicy.py b/python/sepolicy/sepolicy.py
+index 7ebe0efa88a1..c7a70e094b0c 100755
+--- a/python/sepolicy/sepolicy.py
++++ b/python/sepolicy/sepolicy.py
+@@ -36,7 +36,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/python/sepolicy/sepolicy/__init__.py b/python/sepolicy/sepolicy/__init__.py
+index 95520f9bc35d..6bde1971fd7c 100644
+--- a/python/sepolicy/sepolicy/__init__.py
++++ b/python/sepolicy/sepolicy/__init__.py
+@@ -31,7 +31,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/python/sepolicy/sepolicy/generate.py b/python/sepolicy/sepolicy/generate.py
+index 3e8b9f9c291d..eff3a8973917 100644
+--- a/python/sepolicy/sepolicy/generate.py
++++ b/python/sepolicy/sepolicy/generate.py
+@@ -56,7 +56,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/python/sepolicy/sepolicy/gui.py b/python/sepolicy/sepolicy/gui.py
+index b0263740a79f..5bdbfebade1d 100644
+--- a/python/sepolicy/sepolicy/gui.py
++++ b/python/sepolicy/sepolicy/gui.py
+@@ -49,7 +49,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/python/sepolicy/sepolicy/interface.py b/python/sepolicy/sepolicy/interface.py
+index 599f97fdc6e7..43f86443f2c8 100644
+--- a/python/sepolicy/sepolicy/interface.py
++++ b/python/sepolicy/sepolicy/interface.py
+@@ -38,7 +38,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+diff --git a/sandbox/sandbox b/sandbox/sandbox
+index 3ef444a12561..53cc504149c9 100644
+--- a/sandbox/sandbox
++++ b/sandbox/sandbox
+@@ -45,7 +45,8 @@ try:
+         kwargs['unicode'] = True
+     t = gettext.translation(PROGNAME,
+                     localedir="/usr/share/locale",
+-                    **kwargs)
++                    **kwargs,
++                    fallback=True)
+     _ = t.gettext
+ except:
+     try:
+-- 
+2.36.1
+

@@ -1,0 +1,27 @@
+From f361ee407490bc74b43ec408b1edc70cd647d4e0 Mon Sep 17 00:00:00 2001
+From: Petr Lautrbach <plautrba@redhat.com>
+Date: Thu, 20 Aug 2015 12:58:41 +0200
+Subject: [PATCH] sandbox: add -reset to Xephyr as it works better with it in
+ recent Fedoras
+Content-type: text/plain
+
+---
+ sandbox/sandboxX.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sandbox/sandboxX.sh b/sandbox/sandboxX.sh
+index eaa500d08143..4774528027ef 100644
+--- a/sandbox/sandboxX.sh
++++ b/sandbox/sandboxX.sh
+@@ -20,7 +20,7 @@ cat > ~/.config/openbox/rc.xml << EOF
+ </openbox_config>
+ EOF
+ 
+-(/usr/bin/Xephyr -resizeable -title "$TITLE" -terminate -screen $SCREENSIZE -dpi $DPI -nolisten tcp -displayfd 5 5>&1 2>/dev/null) | while read D; do
++(/usr/bin/Xephyr -resizeable -title "$TITLE" -terminate -reset -screen $SCREENSIZE -dpi $DPI -nolisten tcp -displayfd 5 5>&1 2>/dev/null) | while read D; do
+     export DISPLAY=:$D
+     cat > ~/seremote << __EOF
+ #!/bin/sh
+-- 
+2.35.1
+

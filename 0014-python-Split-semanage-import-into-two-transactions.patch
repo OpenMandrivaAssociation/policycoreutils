@@ -1,0 +1,65 @@
+From 4a53c0c3ee0edba37ba8e62064175c4928f761a8 Mon Sep 17 00:00:00 2001
+From: Vit Mojzis <vmojzis@redhat.com>
+Date: Mon, 30 May 2022 14:20:21 +0200
+Subject: [PATCH] python: Split "semanage import" into two transactions
+Content-type: text/plain
+
+First transaction applies all deletion operations, so that there are no
+collisions when applying the rest of the changes.
+
+Fixes:
+  # semanage port -a -t http_cache_port_t -r s0 -p tcp 3024
+  # semanage export | semanage import
+  ValueError: Port tcp/3024 already defined
+
+Signed-off-by: Vit Mojzis <vmojzis@redhat.com>
+---
+ python/semanage/semanage | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/python/semanage/semanage b/python/semanage/semanage
+index f45061a601f9..4e8d64d6863a 100644
+--- a/python/semanage/semanage
++++ b/python/semanage/semanage
+@@ -853,10 +853,29 @@ def handleImport(args):
+     trans = seobject.semanageRecords(args)
+     trans.start()
+ 
++    deleteCommands = []
++    commands = []
++    # separate commands for deletion from the rest so they can be
++    # applied in a separate transaction
+     for l in sys.stdin.readlines():
+         if len(l.strip()) == 0:
+             continue
++        if "-d" in l or "-D" in l:
++            deleteCommands.append(l)
++        else:
++            commands.append(l)
++
++    if deleteCommands:
++        importHelper(deleteCommands)
++        trans.finish()
++        trans.start()
++
++    importHelper(commands)
++    trans.finish()
+ 
++
++def importHelper(commands):
++    for l in commands:
+         try:
+             commandParser = createCommandParser()
+             args = commandParser.parse_args(mkargv(l))
+@@ -870,8 +889,6 @@ def handleImport(args):
+         except KeyboardInterrupt:
+             sys.exit(0)
+ 
+-    trans.finish()
+-
+ 
+ def setupImportParser(subparsers):
+     importParser = subparsers.add_parser('import', help=_('Import local customizations'))
+-- 
+2.36.1
+
