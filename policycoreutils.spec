@@ -232,7 +232,6 @@ by python in an SELinux environment.
 Summary: SELinux policy core policy devel utilities
 Requires: policycoreutils-python-utils = %{version}-%{release}
 Requires: /usr/bin/make
-Requires: selinux-policy-devel
 
 %description devel
 The policycoreutils-devel package contains the management tools use to develop policy in an SELinux environment.
