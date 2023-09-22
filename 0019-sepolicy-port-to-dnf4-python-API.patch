@@ -1,0 +1,84 @@
+From d925b00da35384331df9bf31935398c37117f895 Mon Sep 17 00:00:00 2001
+From: Petr Lautrbach <lautrbach@redhat.com>
+Date: Sat, 29 Jul 2023 20:33:06 +0200
+Subject: [PATCH] sepolicy: port to dnf4 python API
+Content-type: text/plain
+
+yum module is not available since RHEL 7.
+
+Drop -systemd related code as it's obsoleted these days - only 2
+packages ship their .service in -systemd subpackage
+
+Signed-off-by: Petr Lautrbach <lautrbach@redhat.com>
+---
+ python/sepolicy/sepolicy/generate.py | 38 ++++++++++++----------------
+ 1 file changed, 16 insertions(+), 22 deletions(-)
+
+diff --git a/python/sepolicy/sepolicy/generate.py b/python/sepolicy/sepolicy/generate.py
+index 36a3ea1196b1..48602a736953 100644
+--- a/python/sepolicy/sepolicy/generate.py
++++ b/python/sepolicy/sepolicy/generate.py
+@@ -1264,13 +1264,20 @@ allow %s_t %s_t:%s_socket name_%s;
+         return fcfile
+ 
+     def __extract_rpms(self):
+-        import yum
+-        yb = yum.YumBase()
+-        yb.setCacheDir()
++        import dnf
+ 
+-        for pkg in yb.rpmdb.searchProvides(self.program):
++        base = dnf.Base()
++        base.read_all_repos()
++        base.fill_sack(load_system_repo=True)
++
++        query = base.sack.query()
++
++        pq = query.available()
++        pq = pq.filter(file=self.program)
++
++        for pkg in pq:
+             self.rpms.append(pkg.name)
+-            for fname in pkg.dirlist + pkg.filelist + pkg.ghostlist:
++            for fname in pkg.files:
+                 for b in self.DEFAULT_DIRS:
+                     if b == "/etc":
+                         continue
+@@ -1279,9 +1286,10 @@ allow %s_t %s_t:%s_socket name_%s;
+                             self.add_file(fname)
+                         else:
+                             self.add_dir(fname)
+-
+-            for bpkg in yb.rpmdb.searchNames([pkg.base_package_name]):
+-                for fname in bpkg.dirlist + bpkg.filelist + bpkg.ghostlist:
++            sq = query.available()
++            sq = sq.filter(provides=pkg.source_name)
++            for bpkg in sq:
++                for fname in bpkg.files:
+                     for b in self.DEFAULT_DIRS:
+                         if b == "/etc":
+                             continue
+@@ -1291,20 +1299,6 @@ allow %s_t %s_t:%s_socket name_%s;
+                             else:
+                                 self.add_dir(fname)
+ 
+-        # some packages have own systemd subpackage
+-        # tor-systemd for example
+-        binary_name = self.program.split("/")[-1]
+-        for bpkg in yb.rpmdb.searchNames(["%s-systemd" % binary_name]):
+-            for fname in bpkg.filelist + bpkg.ghostlist + bpkg.dirlist:
+-                for b in self.DEFAULT_DIRS:
+-                    if b == "/etc":
+-                        continue
+-                    if fname.startswith(b):
+-                        if os.path.isfile(fname):
+-                            self.add_file(fname)
+-                        else:
+-                            self.add_dir(fname)
+-
+     def gen_writeable(self):
+         try:
+             self.__extract_rpms()
+-- 
+2.41.0
+

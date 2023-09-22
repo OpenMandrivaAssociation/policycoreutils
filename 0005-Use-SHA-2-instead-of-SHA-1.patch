@@ -1,4 +1,4 @@
-From 53d085d8d6edc05886d473e412a8025b7f8d9ce4 Mon Sep 17 00:00:00 2001
+From 74e2d05df2ed090909c0ac6fd7ff7816b94d83ce Mon Sep 17 00:00:00 2001
 From: Petr Lautrbach <plautrba@redhat.com>
 Date: Fri, 30 Jul 2021 14:14:37 +0200
 Subject: [PATCH] Use SHA-2 instead of SHA-1
@@ -254,10 +254,10 @@ index 910101452625..7f2daa09191b 100644
  , и, при условии, что НЕ установлен параметр
  .B \-n
 diff --git a/policycoreutils/setfiles/setfiles.8 b/policycoreutils/setfiles/setfiles.8
-index 19b59a2cc90d..bad9f37a9ac4 100644
+index bf26e161a71d..36fe6b369548 100644
 --- a/policycoreutils/setfiles/setfiles.8
 +++ b/policycoreutils/setfiles/setfiles.8
-@@ -87,14 +87,14 @@ display usage information and exit.
+@@ -95,14 +95,14 @@ display usage information and exit.
  ignore files that do not exist.
  .TP
  .B \-I
@@ -275,7 +275,7 @@ index 19b59a2cc90d..bad9f37a9ac4 100644
  enable usage of the
  .IR security.sehash
  extended attribute.
-@@ -239,7 +239,7 @@ the
+@@ -261,7 +261,7 @@ the
  .B \-D
  option to
  .B setfiles
@@ -284,7 +284,7 @@ index 19b59a2cc90d..bad9f37a9ac4 100644
  .B spec_file
  set in an extended attribute named
  .IR security.sehash
-@@ -260,7 +260,7 @@ for further details.
+@@ -282,7 +282,7 @@ for further details.
  .sp
  The
  .B \-I
@@ -294,5 +294,5 @@ index 19b59a2cc90d..bad9f37a9ac4 100644
  and provided the
  .B \-n
 -- 
-2.35.1
+2.39.1
 

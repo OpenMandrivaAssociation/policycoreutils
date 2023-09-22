@@ -1,0 +1,32 @@
+From 74b849c9405f1b751e696c7fb2e419fcbd491fab Mon Sep 17 00:00:00 2001
+From: Petr Lautrbach <lautrbach@redhat.com>
+Date: Wed, 17 May 2023 13:09:58 +0200
+Subject: [PATCH] semanage: Drop unnecessary import from seobject
+Content-type: text/plain
+
+sepolgen.module is not used for permissive domains
+
+Signed-off-by: Petr Lautrbach <lautrbach@redhat.com>
+---
+ python/semanage/seobject.py | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/python/semanage/seobject.py b/python/semanage/seobject.py
+index 2b1eb44ce8a3..361205d11c10 100644
+--- a/python/semanage/seobject.py
++++ b/python/semanage/seobject.py
+@@ -504,11 +504,6 @@ class permissiveRecords(semanageRecords):
+             print(t)
+ 
+     def add(self, type):
+-        try:
+-            import sepolgen.module as module
+-        except ImportError:
+-            raise ValueError(_("The sepolgen python module is required to setup permissive domains.\nIn some distributions it is included in the policycoreutils-devel package.\n# yum install policycoreutils-devel\nOr similar for your distro."))
+-
+         name = "permissive_%s" % type
+         modtxt = "(typepermissive %s)" % type
+ 
+-- 
+2.41.0
+

@@ -1,0 +1,93 @@
+From 73fd4231024f6241af6263ba74b70459bf9611f1 Mon Sep 17 00:00:00 2001
+From: Vit Mojzis <vmojzis@redhat.com>
+Date: Thu, 1 Jun 2023 18:34:30 +0200
+Subject: [PATCH] python/sepolicy: Fix template for confined user policy
+ modules
+
+The following commit
+https://github.com/SELinuxProject/refpolicy/commit/330b0fc3331d3b836691464734c96f3da3044490
+changed the userdom_base_user_template, which now requires a role
+corresponding to the user being created to be defined outside of the
+template.
+Similar change was also done to fedora-selinux/selinux-policy
+https://github.com/fedora-selinux/selinux-policy/commit/e1e216b25df1bdb4eb7dbb8f73f32927ad6f3d1f
+
+Although I believe the template should define the role (just as it
+defines the new user), that will require extensive changes to refpolicy.
+In the meantime the role needs to be defined separately.
+
+Fixes:
+    # sepolicy generate --term_user -n newuser
+    Created the following files:
+    /root/a/test/newuser.te # Type Enforcement file
+    /root/a/test/newuser.if # Interface file
+    /root/a/test/newuser.fc # File Contexts file
+    /root/a/test/newuser_selinux.spec # Spec file
+    /root/a/test/newuser.sh # Setup Script
+
+    # ./newuser.sh
+    Building and Loading Policy
+    + make -f /usr/share/selinux/devel/Makefile newuser.pp
+    Compiling targeted newuser module
+    Creating targeted newuser.pp policy package
+    rm tmp/newuser.mod tmp/newuser.mod.fc
+    + /usr/sbin/semodule -i newuser.pp
+    Failed to resolve roleattributeset statement at /var/lib/selinux/targeted/tmp/modules/400/newuser/cil:8
+    Failed to resolve AST
+    /usr/sbin/semodule:  Failed!
+
+Signed-off-by: Vit Mojzis <vmojzis@redhat.com>
+Acked-by: Petr Lautrbach <lautrbach@redhat.com>
+---
+ python/sepolicy/sepolicy/templates/user.py | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/python/sepolicy/sepolicy/templates/user.py b/python/sepolicy/sepolicy/templates/user.py
+index 1ff9d2ce..7081fbae 100644
+--- a/python/sepolicy/sepolicy/templates/user.py
++++ b/python/sepolicy/sepolicy/templates/user.py
+@@ -28,6 +28,8 @@ policy_module(TEMPLATETYPE, 1.0.0)
+ #
+ # Declarations
+ #
++role TEMPLATETYPE_r;
++
+ userdom_unpriv_user_template(TEMPLATETYPE)
+ """
+ 
+@@ -38,6 +40,8 @@ policy_module(TEMPLATETYPE, 1.0.0)
+ #
+ # Declarations
+ #
++role TEMPLATETYPE_r;
++
+ userdom_admin_user_template(TEMPLATETYPE)
+ """
+ 
+@@ -48,6 +52,7 @@ policy_module(TEMPLATETYPE, 1.0.0)
+ #
+ # Declarations
+ #
++role TEMPLATETYPE_r;
+ 
+ userdom_restricted_user_template(TEMPLATETYPE)
+ """
+@@ -59,6 +64,7 @@ policy_module(TEMPLATETYPE, 1.0.0)
+ #
+ # Declarations
+ #
++role TEMPLATETYPE_r;
+ 
+ userdom_restricted_xwindows_user_template(TEMPLATETYPE)
+ """
+@@ -89,6 +95,7 @@ gen_tunable(TEMPLATETYPE_manage_user_files, false)
+ #
+ # Declarations
+ #
++role TEMPLATETYPE_r;
+ 
+ userdom_base_user_template(TEMPLATETYPE)
+ """
+-- 
+2.40.0
+

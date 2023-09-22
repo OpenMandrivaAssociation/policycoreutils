@@ -1,11 +1,4 @@
 sources:
   sepolicy-icons.tgz: d849fa76cc3ef4a26047d8a69fef3a55d2f3097f
   system-config-selinux.png: 611a5d497efaddd45ec0dcc3e9b2e5b0f81ebc41
-  policycoreutils-3.4.tar.gz: 5c73e3389bf93b9acba4bcbde1260a6af048ffa9
-  restorecond-3.4.tar.gz: 5653d32d24918ce741536e8c2326df84287cfea7
-  selinux-3.4.tar.gz: 3c789c6783738e17f74221efa475cbb878183379
-  selinux-dbus-3.4.tar.gz: 67ab9b49b98bb6b53f33564f6fc78867229fea3b
-  selinux-gui-3.4.tar.gz: a7e19fcdd64e88bd567aa1c185c419d6ad8dc352
-  selinux-python-3.4.tar.gz: 9d9c96857ba98c951ffd75321aec22c373bfb782
-  selinux-sandbox-3.4.tar.gz: e90c292f075d04385579684e144921cf2462bf33
-  semodule-utils-3.4.tar.gz: 16eb2457e3cc92c980fb703db882d8a3b10e7526
+  selinux-3.5.tar.gz: 28e8c0a58e01436b1c931559da3844d5774f8186

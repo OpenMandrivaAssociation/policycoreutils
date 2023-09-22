@@ -1,4 +1,4 @@
-From 8054dc44cf105b959864a1424fe857fac3ba3d73 Mon Sep 17 00:00:00 2001
+From 42b676e7677d4efe5383558afb3de962948f7a1d Mon Sep 17 00:00:00 2001
 From: Petr Lautrbach <plautrba@redhat.com>
 Date: Wed, 18 Jul 2018 09:09:35 +0200
 Subject: [PATCH] sandbox: Use matchbox-window-manager instead of openbox
@@ -11,10 +11,10 @@ Content-type: text/plain
  3 files changed, 3 insertions(+), 17 deletions(-)
 
 diff --git a/sandbox/sandbox b/sandbox/sandbox
-index 16c43b51eaaa..7709a6585665 100644
+index a2762a7d215a..a32a33ea3cf6 100644
 --- a/sandbox/sandbox
 +++ b/sandbox/sandbox
-@@ -268,7 +268,7 @@ class Sandbox:
+@@ -270,7 +270,7 @@ class Sandbox:
              copyfile(f, "/tmp", self.__tmpdir)
              copyfile(f, "/var/tmp", self.__tmpdir)
  
@@ -23,7 +23,7 @@ index 16c43b51eaaa..7709a6585665 100644
          execfile = self.__homedir + "/.sandboxrc"
          fd = open(execfile, "w+")
          if self.__options.session:
-@@ -362,7 +362,7 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
+@@ -369,7 +369,7 @@ sandbox [-h] [-l level ] [-[X|M] [-H homedir] [-T tempdir]] [-I includefile ] [-
  
          parser.add_option("-W", "--windowmanager", dest="wm",
                            type="string",
@@ -33,10 +33,10 @@ index 16c43b51eaaa..7709a6585665 100644
  
          parser.add_option("-l", "--level", dest="level",
 diff --git a/sandbox/sandbox.8 b/sandbox/sandbox.8
-index d83fee76f335..90ef4951c8c2 100644
+index 1ee0ecea96d1..775e4b231204 100644
 --- a/sandbox/sandbox.8
 +++ b/sandbox/sandbox.8
-@@ -77,7 +77,7 @@ Specifies the windowsize when creating an X based Sandbox. The default windowsiz
+@@ -80,7 +80,7 @@ Specifies the windowsize when creating an X based Sandbox. The default windowsiz
  \fB\-W\fR \fB\-\-windowmanager\fR
  Select alternative window manager to run within 
  .B sandbox \-X.
@@ -71,5 +71,5 @@ index 4774528027ef..c211ebc14549 100644
      export DISPLAY=:$D
      cat > ~/seremote << __EOF
 -- 
-2.35.1
+2.39.1
 

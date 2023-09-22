@@ -14,8 +14,8 @@
 
 Summary: SELinux policy core utilities
 Name:    policycoreutils
-Version: 3.4
-Release: 2
+Version: 3.5
+Release: 1
 License: GPLv2
 # https://github.com/SELinuxProject/selinux/wiki/Releases
 Source0: https://github.com/SELinuxProject/selinux/releases/download/%{version}/selinux-%{version}.tar.gz
@@ -29,22 +29,26 @@ Source18: selinux-autorelabel.target
 Source19: selinux-autorelabel-generator.sh
 
 Patch0001: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0001-sandbox-add-reset-to-Xephyr-as-it-works-better-with-.patch
-Patch0002: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0002-Fix-STANDARD_FILE_CONTEXT-section-in-man-pages.patch
-Patch0003: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0003-If-there-is-no-executable-we-don-t-want-to-print-a-p.patch
-Patch0004: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0004-Simplication-of-sepolicy-manpage-web-functionality.-.patch
-Patch0005: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0005-We-want-to-remove-the-trailing-newline-for-etc-syste.patch
-Patch0006: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0006-Fix-title-in-manpage.py-to-not-contain-online.patch
-Patch0007: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0007-Don-t-be-verbose-if-you-are-not-on-a-tty.patch
-Patch0008: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0008-sepolicy-generate-Handle-more-reserved-port-types.patch
-Patch0009: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0009-sandbox-Use-matchbox-window-manager-instead-of-openb.patch
-Patch0010: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0010-Use-SHA-2-instead-of-SHA-1.patch
-Patch0011: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0011-sepolicy-Drop-old-interface-file_type_is_executable-.patch
-Patch0012: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0012-gettext-handle-unsupported-languages-properly.patch
-Patch0013: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0013-semodule-rename-rebuild-if-modules-changed-to-refres.patch
-Patch0014: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0014-python-Split-semanage-import-into-two-transactions.patch
+Patch0002: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0002-Don-t-be-verbose-if-you-are-not-on-a-tty.patch
+Patch0003: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0003-sepolicy-generate-Handle-more-reserved-port-types.patch
+Patch0004: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0004-sandbox-Use-matchbox-window-manager-instead-of-openb.patch
+Patch0005: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0005-Use-SHA-2-instead-of-SHA-1.patch
+Patch0006: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0006-python-chcat-Improve-man-pages.patch
+Patch0007: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0007-python-audit2allow-Add-missing-options-to-man-page.patch
+Patch0008: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0008-python-semanage-Improve-man-pages.patch
+Patch0009: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0009-python-audit2allow-Remove-unused-debug-option.patch
+Patch0010: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0010-policycoreutils-Add-examples-to-man-pages.patch
+Patch0011: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0011-python-sepolicy-Improve-man-pages.patch
+Patch0012: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0012-sandbox-Add-examples-to-man-pages.patch
+Patch0013: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0013-python-sepolicy-Fix-template-for-confined-user-polic.patch
+Patch0014: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0014-python-sepolicy-Fix-spec-file-dependencies.patch
+Patch0015: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0015-python-improve-format-strings-for-proper-localizatio.patch
+Patch0016: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0016-python-Drop-hard-formating-from-localized-strings.patch
+Patch0017: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0017-semanage-Drop-unnecessary-import-from-seobject.patch
+Patch0018: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0018-python-update-python.pot.patch
+Patch0019: https://src.fedoraproject.org/rpms/policycoreutils/raw/rawhide/f/0019-sepolicy-port-to-dnf4-python-API.patch
 Conflicts: filesystem < 3, selinux-policy-base < 3.13.1-138
 # initscripts < 9.66 shipped fedora-autorelabel services which are renamed to selinux-relabel
-Conflicts: initscripts < 9.66
 Provides: /sbin/fixfiles
 Provides: /sbin/restorecon
 
@@ -193,8 +197,9 @@ an SELinux environment.
 %package -n python-policycoreutils
 %{?python_provide:%python_provide python-policycoreutils}
 Summary: SELinux policy core python interfaces
-Requires:policycoreutils = %{version}-%{release}
-Requires:python-libsemanage >= %{libsemanagever} python-selinux
+Requires: policycoreutils = %{version}-%{release}
+Requires: python-libsemanage >= %{libsemanagever}
+Requires: python%{pyver}dist(selinux)
 Requires: python-audit >=  %{libauditver}
 Requires: checkpolicy
 Requires: python-setools >= 4.1.1
@@ -211,6 +216,7 @@ by python in an SELinux environment.
 %{python3_sitelib}/sepolicy/templates
 %dir %{python3_sitelib}/sepolicy/help
 %{python3_sitelib}/sepolicy/help/*
+%{python3_sitelib}/sepolicy/__pycache__
 %{python3_sitelib}/sepolicy/__init__.py*
 %{python3_sitelib}/sepolicy/booleans.py*
 %{python3_sitelib}/sepolicy/communicate.py*
@@ -220,7 +226,7 @@ by python in an SELinux environment.
 %{python3_sitelib}/sepolicy/network.py*
 %{python3_sitelib}/sepolicy/transition.py*
 %{python3_sitelib}/sepolicy/sedbus.py*
-%{python3_sitelib}/sepolicy*.egg-info
+%{python3_sitelib}/sepolicy*.*-info
 
 %package devel
 Summary: SELinux policy core policy devel utilities

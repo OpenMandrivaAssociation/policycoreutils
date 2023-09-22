@@ -1,4 +1,4 @@
-From d8f51aa7d299383247213b69ec7cbb68c1fa3bc4 Mon Sep 17 00:00:00 2001
+From dbebbe4ff79fe790425ca8740e5ace54396671f2 Mon Sep 17 00:00:00 2001
 From: Masatake YAMATO <yamato@redhat.com>
 Date: Thu, 14 Dec 2017 15:57:58 +0900
 Subject: [PATCH] sepolicy-generate: Handle more reserved port types
@@ -53,10 +53,10 @@ https://lore.kernel.org/selinux/20150610.190635.1866127952891120915.yamato@redha
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/python/sepolicy/sepolicy/generate.py b/python/sepolicy/sepolicy/generate.py
-index 43180ca6fda4..d60a08e1d72c 100644
+index b6df3e91160b..36a3ea1196b1 100644
 --- a/python/sepolicy/sepolicy/generate.py
 +++ b/python/sepolicy/sepolicy/generate.py
-@@ -99,7 +99,9 @@ def get_all_ports():
+@@ -100,7 +100,9 @@ def get_all_ports():
      for p in sepolicy.info(sepolicy.PORT):
          if p['type'] == "reserved_port_t" or \
                  p['type'] == "port_t" or \
@@ -68,5 +68,5 @@ index 43180ca6fda4..d60a08e1d72c 100644
          dict[(p['low'], p['high'], p['protocol'])] = (p['type'], p.get('range'))
      return dict
 -- 
-2.35.1
+2.39.1
 

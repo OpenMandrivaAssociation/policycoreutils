@@ -1,0 +1,79 @@
+From 11325baab31cec170e01c2548d09e540d6a2e67a Mon Sep 17 00:00:00 2001
+From: Vit Mojzis <vmojzis@redhat.com>
+Date: Thu, 4 May 2023 14:04:48 +0200
+Subject: [PATCH] python/audit2allow: Add missing options to man page
+
+Signed-off-by: Vit Mojzis <vmojzis@redhat.com>
+---
+ python/audit2allow/audit2allow.1 | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/python/audit2allow/audit2allow.1 b/python/audit2allow/audit2allow.1
+index 04ec3239..c31021d3 100644
+--- a/python/audit2allow/audit2allow.1
++++ b/python/audit2allow/audit2allow.1
+@@ -40,10 +40,10 @@
+ Read input from audit and message log, conflicts with \-i
+ .TP
+ .B "\-b" | "\-\-boot"
+-Read input from audit messages since last boot conflicts with \-i
++Read input from audit messages since last boot, conflicts with \-i
+ .TP
+ .B "\-d" | "\-\-dmesg"
+-Read input from output of 
++Read input from output of
+ .I /bin/dmesg.
+ Note that all audit messages are not available via dmesg when
+ auditd is running; use "ausearch \-m avc | audit2allow"  or "\-a" instead.
+@@ -51,15 +51,22 @@ auditd is running; use "ausearch \-m avc | audit2allow"  or "\-a" instead.
+ .B "\-D" | "\-\-dontaudit"
+ Generate dontaudit rules (Default: allow)
+ .TP
++.B "\-e" | "\-\-explain"
++Fully explain generated output
++.TP
+ .B "\-h" | "\-\-help"
+ Print a short usage message
+ .TP
+ .B "\-i  <inputfile>" | "\-\-input <inputfile>"
+-read input from 
++Read input from
+ .I <inputfile>
+ .TP
++.B "\-\-interface-info=<interface_info_file>"
++Read interface information from
++.I <interface_info_file>
++.TP
+ .B "\-l" | "\-\-lastreload"
+-read input only after last policy reload
++Read input only after last policy reload
+ .TP
+ .B "\-m <modulename>" | "\-\-module <modulename>"
+ Generate module/require output <modulename>
+@@ -70,8 +77,12 @@ Generate loadable module package, conflicts with \-o
+ .B "\-p <policyfile>"  | "\-\-policy <policyfile>"
+ Policy file to use for analysis
+ .TP
++.B "\-\-perm-map <perm_map_file>"
++Read permission map from
++.I <perm_map_file>
++.TP
+ .B "\-o <outputfile>"  | "\-\-output <outputfile>"
+-append output to 
++Append output to
+ .I <outputfile>
+ .TP
+ .B "\-r" | "\-\-requires"
+@@ -85,6 +96,9 @@ This is the default behavior.
+ Generate reference policy using installed macros.
+ This attempts to match denials against interfaces and may be inaccurate.
+ .TP
++.B "\-t <type_regex>" | "\-\-type=<type_regex>"
++Only process messages with a type that matches this regex
++.TP
+ .B "\-x" | "\-\-xperms"
+ Generate extended permission access vector rules
+ .TP
+-- 
+2.40.0
+

@@ -1,4 +1,4 @@
-From f204dd292340689c2d7ab75612b9fd81337fcbc3 Mon Sep 17 00:00:00 2001
+From 4affa1d7888b8489058d2942ea4431ff65f2430e Mon Sep 17 00:00:00 2001
 From: Dan Walsh <dwalsh@redhat.com>
 Date: Fri, 14 Feb 2014 12:32:12 -0500
 Subject: [PATCH] Don't be verbose if you are not on a tty
@@ -9,7 +9,7 @@ Content-type: text/plain
  1 file changed, 1 insertion(+)
 
 diff --git a/policycoreutils/scripts/fixfiles b/policycoreutils/scripts/fixfiles
-index c72ca0eb9d61..163ebcd1f232 100755
+index 166af6f360a2..ebe64563c7d7 100755
 --- a/policycoreutils/scripts/fixfiles
 +++ b/policycoreutils/scripts/fixfiles
 @@ -108,6 +108,7 @@ exclude_dirs_from_relabelling() {
@@ -21,5 +21,5 @@ index c72ca0eb9d61..163ebcd1f232 100755
  THREADS=""
  RPMFILES=""
 -- 
-2.35.1
+2.39.1
 
