@@ -53,6 +53,7 @@ Provides: /sbin/fixfiles
 Provides: /sbin/restorecon
 
 
+BuildRequires:	make
 BuildRequires:	desktop-file-utils
 BuildRequires:	pkgconfig(dbus-1) 
 BuildRequires:	pkgconfig(dbus-glib-1)
